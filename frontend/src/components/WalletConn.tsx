@@ -6,6 +6,7 @@ export function WalletConn() {
   const connectors = useConnectors()
   const { disconnect } = useDisconnect()
 
+  const isConnected = connection.status === 'connected'
   const activeAddress = connection.addresses?.[0]
 
   return (
@@ -21,16 +22,17 @@ export function WalletConn() {
             chainId: {connection.chainId}
         </div>
 
-        {connection.status === 'connected' && (
+        {isConnected && (
             <button type="button" onClick={() => disconnect()}>
             Disconnect
             </button>
         )}
-        </div>
 
-        <div>
-        <h2>Connect</h2>
-        {connectors.map((connector) => (
+        {!isConnected && (
+          <p className="muted">Conecte sua carteira.</p>
+        )}
+
+        {!isConnected && connectors.map((connector) => (
             <button
             key={connector.uid}
             onClick={() => connect({ connector })}
@@ -39,7 +41,7 @@ export function WalletConn() {
             {connector.name}
             </button>
         ))}
-        <div>{status}</div>
+
         <div>{error?.message}</div>
       </div>
 
